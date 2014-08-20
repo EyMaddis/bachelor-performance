@@ -22,6 +22,28 @@
       });
     };
 
+    ResultRenderer.drawPie = function(div, results) {
+      var biggerFont, options;
+      biggerFont = function(label, series) {
+        console.log(series);
+        return "<div style='font-size:20px; padding: 5px; background: white;color: " + series.color + "'>" + label + "<br/>" + series.percent.toFixed(2) + ("% (" + (series.data[0][1].toFixed(2)) + " ms)</div>");
+      };
+      options = {
+        series: {
+          pie: {
+            show: true,
+            label: {
+              formatter: biggerFont
+            }
+          }
+        },
+        legend: {
+          show: false
+        }
+      };
+      return $(div).plot(results, options);
+    };
+
     return ResultRenderer;
 
   })();

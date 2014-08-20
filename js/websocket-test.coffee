@@ -4,15 +4,29 @@ maxInstances = 0
 @test_instances = []
 current_id = 0
 
+window.bla = 0
+
+allConnectionsEstablished = () ->
+  console.log 'all connections established, triggering test'
+  ResultRenderer.drawResults(results)
+  for test in test_instances
+    test.triggerSimulation()
+
+allTestsFinished = () ->
+  console.log 'Alle Tests abgeschlossen'
+
+finishedTests = 0
 
 class Test
-  constructor: (@instance) ->
+  constructor: (instance) ->
+    @instance = instance
     @id = current_id
     current_id += 1
 #    console.log 'constructor:', @id, instance
     @startTime = Date.now()
     @established = 0
     @timesBetweenPackages = []
+    @packetReceived = []
 
     # establish connection
     @webSocket = new WebSocketRails url
@@ -32,16 +46,13 @@ class Test
     results[@id] = [@id,rtt]
 
     if @id >= (maxInstances-1)
-      console.log 'Test finished', results
-      ResultRenderer.drawResults(results)
+      allConnectionsEstablished()
     console.log 'established', @id
 
-  triggerSimulation: () =>
-    @webSocket.trigger "simulateGrid", @instance
-    @triggered = Date.now()
+    @webSocket.bind 'step', @receivePacket
 
   isFailed: () ->
-    @failed || @failedSubscription
+    return @failed || @failedSubscription
 
   onClose: (event) =>
     console.log "Verbindung bei Test verloren:", @id
@@ -52,24 +63,34 @@ class Test
     console.log 'error occurred for id: ', @id, ' error: ', event, ' RTT:', @getRoundTripTime()
     @failed = true
 
-  onSubscriptionFail: () =>
-    @failedSubscription = true
 
-  onSubscription: () =>
-    @channelSubscribed = Date.now()
+  receivePacket: (packet) =>
+    bla++
 
-#  receivePacket: (packet) =>
-#    @packetReceived = Date.now()
-#    @receivedPacket = true
-#    if 'exit' in packet.operations
-#      @done = true
-#      console.log 'test finished'
-#      for msg in packet.messages
-#        if msg.type is 'error'
-#          @failed = true
-#          @error = msg.message
-#          console.log msg.message
+    @packetReceived.push Date.now()
+    @receivedPacket = true
+    console.log packet
+    for op in packet.operations
+      console.log op.name
+      continue if op.name != 'exit'
+      @done = true
+      console.log 'test finished', @id, finishedTests
+      finishedTests++
+      for msg in packet.messages
+        if msg.type is 'error'
+          @failed = true
+          @error = msg.message
+          console.log msg.message
 
+      if finishedTests >= maxInstances
+        allTestsFinished()
+
+
+  triggerSimulation: () =>
+    @webSocket.trigger "simulateGrid", @instance
+    @triggered = Date.now()
+    console.log 'triggered test for', @id
+    return @triggered
 
 # Load the page.
 $ () ->
@@ -81,14 +102,21 @@ $ () ->
   $results = $ '#results'
 
   runTests = (testInstance) ->
-    test_instances = new Array(maxInstances)
+    @test_instances = new Array(maxInstances)
     for i in [0...maxInstances]
       test = new Test(testInstance)
-      test_instances[i] = test
+      @test_instances[i] = test
+
+  $('#url').val(localStorage.getItem 'url')
+  $(window).on 'beforeunload', (event) ->
+    localStorage.setItem 'url', $('#url').val()
 
   $('#runTests').click () ->
+
     url = $('#url').val()
+    finishedTests = 0
     maxInstances = parseInt($('#instances').val())
+    window.test_instances = new Array(maxInstances)
     window.results = new Array(maxInstances)
     test = $('#test_instance').val()
     console.log "Starte Tests"
