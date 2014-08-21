@@ -40,6 +40,29 @@ class Test
   getRoundTripTime: () =>
     @established - @startTime
 
+
+  receivePacket: (packet) =>
+    bla++
+
+    @packetReceived.push Date.now()
+    @receivedPacket = true
+    console.log packet
+    for op in packet.operations
+      console.log op.name
+      continue if op.name != 'exit'
+      @done = true
+      console.log 'test finished', @id, finishedTests
+      finishedTests++
+      for msg in packet.messages
+        if msg.type is 'error'
+          @failed = true
+          @error = msg.message
+          console.log msg.message
+
+      if finishedTests >= maxInstances
+        allTestsFinished()
+
+
   onOpen: (event) =>
     @established = Date.now()
     rtt = @getRoundTripTime()
@@ -62,28 +85,6 @@ class Test
     @established = Date.now()
     console.log 'error occurred for id: ', @id, ' error: ', event, ' RTT:', @getRoundTripTime()
     @failed = true
-
-
-  receivePacket: (packet) =>
-    bla++
-
-    @packetReceived.push Date.now()
-    @receivedPacket = true
-    console.log packet
-    for op in packet.operations
-      console.log op.name
-      continue if op.name != 'exit'
-      @done = true
-      console.log 'test finished', @id, finishedTests
-      finishedTests++
-      for msg in packet.messages
-        if msg.type is 'error'
-          @failed = true
-          @error = msg.message
-          console.log msg.message
-
-      if finishedTests >= maxInstances
-        allTestsFinished()
 
 
   triggerSimulation: () =>

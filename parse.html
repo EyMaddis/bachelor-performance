@@ -9,12 +9,21 @@
 <h1>Testen der Websocket Performance für WebPiraten (Ruby)</h1>
 
 <div>
-    <textarea row="30" cols="100" style="width: 100%; height: 50px" id="log"></textarea> <br>
+    <div>
+        <textarea cols="100" style="float: left;width: 45%; height: 100px" id="log" placeholder="Pie Chart"></textarea>
+        <textarea cols="100" style="float: left;width: 45%; height: 100px" placeholder="Vergleichen" id="compareLog"></textarea>
+    </div>
     <input type="text" width="50" id="connection_id" placeholder="Id Filter" /><br>
     <button id="start">Analyze</button>
 </div>
 
-<div id="pies" style="margin-top: 50px"></div>
+<div id="pies" style="margin-top: 50px">
+    <div id="pie-prepender" style="clear: both"> </div>
+</div>
+
+<div id="comparisons">
+    <div id="comparisons-prepender" style="clear: both"> </div>
+</div>
 <script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/parser.js"></script>
 <script src="js/flot/jquery.flot.min.js"></script>

@@ -36,10 +36,10 @@
   Test = (function() {
     function Test(instance) {
       this.triggerSimulation = __bind(this.triggerSimulation, this);
-      this.receivePacket = __bind(this.receivePacket, this);
       this.onError = __bind(this.onError, this);
       this.onClose = __bind(this.onClose, this);
       this.onOpen = __bind(this.onOpen, this);
+      this.receivePacket = __bind(this.receivePacket, this);
       this.getRoundTripTime = __bind(this.getRoundTripTime, this);
       this.instance = instance;
       this.id = current_id;
@@ -59,33 +59,6 @@
 
     Test.prototype.getRoundTripTime = function() {
       return this.established - this.startTime;
-    };
-
-    Test.prototype.onOpen = function(event) {
-      var rtt;
-      this.established = Date.now();
-      rtt = this.getRoundTripTime();
-      results[this.id] = [this.id, rtt];
-      if (this.id >= (maxInstances - 1)) {
-        allConnectionsEstablished();
-      }
-      console.log('established', this.id);
-      return this.webSocket.bind('step', this.receivePacket);
-    };
-
-    Test.prototype.isFailed = function() {
-      return this.failed || this.failedSubscription;
-    };
-
-    Test.prototype.onClose = function(event) {
-      console.log("Verbindung bei Test verloren:", this.id);
-      return this.closed = true;
-    };
-
-    Test.prototype.onError = function(event) {
-      this.established = Date.now();
-      console.log('error occurred for id: ', this.id, ' error: ', event, ' RTT:', this.getRoundTripTime());
-      return this.failed = true;
     };
 
     Test.prototype.receivePacket = function(packet) {
@@ -121,6 +94,33 @@
         }
       }
       return _results;
+    };
+
+    Test.prototype.onOpen = function(event) {
+      var rtt;
+      this.established = Date.now();
+      rtt = this.getRoundTripTime();
+      results[this.id] = [this.id, rtt];
+      if (this.id >= (maxInstances - 1)) {
+        allConnectionsEstablished();
+      }
+      console.log('established', this.id);
+      return this.webSocket.bind('step', this.receivePacket);
+    };
+
+    Test.prototype.isFailed = function() {
+      return this.failed || this.failedSubscription;
+    };
+
+    Test.prototype.onClose = function(event) {
+      console.log("Verbindung bei Test verloren:", this.id);
+      return this.closed = true;
+    };
+
+    Test.prototype.onError = function(event) {
+      this.established = Date.now();
+      console.log('error occurred for id: ', this.id, ' error: ', event, ' RTT:', this.getRoundTripTime());
+      return this.failed = true;
     };
 
     Test.prototype.triggerSimulation = function() {
