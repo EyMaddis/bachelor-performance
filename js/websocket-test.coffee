@@ -4,7 +4,7 @@ maxInstances = 0
 @test_instances = []
 current_id = 0
 
-window.bla = 0
+window.packageCounter = 0
 
 allConnectionsEstablished = () ->
   console.log 'all connections established, triggering test'
@@ -36,28 +36,33 @@ class Test
     @webSocket._conn.on_close = @onClose
     @webSocket._conn.on_error = @onError
     @webSocket._conn.on_open = @onOpen
+    @firstPacket = null
+    @lastPacket = null
 
   getRoundTripTime: () =>
     @established - @startTime
 
 
   receivePacket: (packet) =>
-    bla++
+    packageCounter++
 
     @packetReceived.push Date.now()
     @receivedPacket = true
-    console.log packet
+    if @firstPacket is null
+      console.log 'first packet received for connection', @id
+      @firstPacket = Date.now
+#    console.log packet
     for op in packet.operations
-      console.log op.name
+#      console.log op.name
       continue if op.name != 'exit'
-      @done = true
-      console.log 'test finished', @id, finishedTests
+      @lastPacket = Date.now
+#      console.log 'test finished', @id, finishedTests
       finishedTests++
       for msg in packet.messages
         if msg.type is 'error'
           @failed = true
           @error = msg.message
-          console.log msg.message
+#          console.log msg.message
 
       if finishedTests >= maxInstances
         allTestsFinished()

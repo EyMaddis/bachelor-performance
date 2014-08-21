@@ -43,6 +43,28 @@
     "speed":40,
     "language":"ruby"
   }
+  countOps: {
+    "code":"i=0;loop do look;puts i;i+=1;end",
+    "grid":{
+      "width":22,
+      "height":10,
+      "objects":[
+
+      ],
+      "ship":{
+        "name":"ship",
+        "x":4,
+        "y":3,
+        "rotation":0
+      },
+      "size":32
+    },
+    "vars":[
+
+    ],
+    "speed":40,
+    "language":"ruby"
+  }
   searchTreasures: {
     "code":"def rev(d)\n  if d == :right\n    return :left\n  end\n  return :right\nend\n\ndef start\n  dir = [:front, :left, :right]\n  for d in dir\n    l = look(d)\n    if l == :treasure\n      if d != :front\n        turn(d)\n        start\n        turn(rev(d))\n        return\n      else\n        move\n        take\n        start\n        put\n        move\n        return\n      end\n    end\n  end\n  turn\nend\n\nstart\nturn",
     "grid":{

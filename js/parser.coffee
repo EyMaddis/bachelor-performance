@@ -85,6 +85,49 @@ drawCompare = () ->
   ResultRenderer.drawLines '#comp', data
 
 
+
+drawCPU2 = () ->
+  log = $('#compareLog').val()
+  lines = log.split("\n")
+  cpu = []
+  sum = 0
+  for line in lines
+    arr = line.split(',')
+    time =parseInt(arr[0])
+    usage = parseInt arr[1]
+    continue if usage < 2 or usage >100
+    cpu.push usage
+    sum += usage
+  average = sum/cpu.length
+  console.log "resourcen", cpu, average
+
+drawCPU = () ->
+  log = $('#compareLog').val()
+  lines = log.split("\n")
+  toParse = null
+  cpu = []
+  memory = []
+  switchToCPU = false
+  for line in lines
+    unless switchToCPU
+      if toParse != null
+        toParse += "\n#{line}"
+      else
+        toParse = line
+      if line.indexOf('$') > -1
+        switchToCPU = true
+    else
+      arr = line.split(',')
+      time =parseInt(arr[0])
+      usage = parseInt arr[1]
+      mem = parseInt arr[2]
+      cpu.push time, usage
+      memory.push time, mem
+
+  console.log "resourcen", cpu, memory
+  parsed = parse(toParse)
+  console.log "parsed", parsed
+
 saveState = (id) ->
   $(id).val(localStorage.getItem id)
   $(window).on 'beforeunload', () ->
@@ -97,7 +140,8 @@ $ () ->
 
   saves.pie = $('#pies').html()
   saves.comparisons = $('#comparisons').html()
-
+  $('#startCPU').click () ->
+    drawCPU2()
   $('#start').click () ->
     drawPies()
 #    drawCompare()

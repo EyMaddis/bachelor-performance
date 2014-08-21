@@ -13,7 +13,7 @@
 
   current_id = 0;
 
-  window.bla = 0;
+  window.packageCounter = 0;
 
   allConnectionsEstablished = function() {
     var test, _i, _len, _results;
@@ -55,6 +55,8 @@
       this.webSocket._conn.on_close = this.onClose;
       this.webSocket._conn.on_error = this.onError;
       this.webSocket._conn.on_open = this.onOpen;
+      this.firstPacket = null;
+      this.lastPacket = null;
     }
 
     Test.prototype.getRoundTripTime = function() {
@@ -63,20 +65,21 @@
 
     Test.prototype.receivePacket = function(packet) {
       var msg, op, _i, _j, _len, _len1, _ref, _ref1, _results;
-      bla++;
+      packageCounter++;
       this.packetReceived.push(Date.now());
       this.receivedPacket = true;
-      console.log(packet);
+      if (this.firstPacket === null) {
+        console.log('first packet received for connection', this.id);
+        this.firstPacket = Date.now;
+      }
       _ref = packet.operations;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         op = _ref[_i];
-        console.log(op.name);
         if (op.name !== 'exit') {
           continue;
         }
-        this.done = true;
-        console.log('test finished', this.id, finishedTests);
+        this.lastPacket = Date.now;
         finishedTests++;
         _ref1 = packet.messages;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -84,7 +87,6 @@
           if (msg.type === 'error') {
             this.failed = true;
             this.error = msg.message;
-            console.log(msg.message);
           }
         }
         if (finishedTests >= maxInstances) {
