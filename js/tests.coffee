@@ -1007,5 +1007,51 @@
     "speed":0,
     "language":"ruby"
   }
+  better_search_empty: {
+      "code":"loop do \n  if look(:front) == :treasure\n  \tmove\n  \ttake\n  elsif look(:right) == :treasure\n  \tturn :right\n  elsif look(:left) == :treasure\n    turn :left\n  else\n    break\n  end\nend\n",
+      "grid":{
+        "width":14,
+        "height":10,
+        "objects":[
+          {
+            "name":"treasure",
+            "x":10,
+            "y":-1
+          }
+        ],
+        "ship":{
+          "name":"ship",
+          "x":3,
+          "y":3,
+          "rotation":0
+        },
+        "size":32
+      },
+      "vars":[
+
+      ],
+      "speed":0,
+      "language":"ruby"
+    }
+  better_search_demo: {
+    "code":"loop do \n  if look(:front) == :treasure\n  \tmove\n  \ttake\n  elsif look(:right) == :treasure\n  \tturn :right\n  elsif look(:left) == :treasure\n    turn :left\n  else\n    break\n  end\nend\n",
+    "grid":{
+      "width":14,
+      "height":10,
+      "objects":[],
+      "ship":{
+        "name":"ship",
+        "x":3,
+        "y":3,
+        "rotation":0
+      },
+      "size":32
+    },
+    "vars":[
+
+    ],
+    "speed":0,
+    "language":"ruby"
+  }
 }
 
