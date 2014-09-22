@@ -19,7 +19,7 @@ runTest = (id) ->
   onOpen = () ->
 #    sent = Date.now()
     console.log 'open!'
-    webSocket.trigger 'simulateGrid', Tests.searchTreasures
+    webSocket.trigger 'simulateGrid', Tests.better_search_empty
 
   onClose = () ->
     console.log id, 'closed, starting next'
@@ -45,7 +45,7 @@ runTest = (id) ->
   webSocket._conn.on_close = onClose
   webSocket._conn.on_error = onError
   webSocket._conn.on_open = onOpen
-  console.log webSocket
+#  console.log webSocket
 $ () ->
 
   $('#runTests').click () ->
