@@ -1,19 +1,25 @@
 url = 'chevalblanc.informatik.uni-kiel.de:3000/websocket'
-window.times = new Array(100)
 avg = 0
 $counter = $('#counter')
 tests = 100
+window.times = new Array(tests)
 
 runTest = (id) ->
+  console.log 'starting test', id
   webSocket = new WebSocketRails url
-
-  onOpen = () ->
-    sent = Date.now()
-    webSocket.bind 'pong', () ->
-      times[id-1] = Date.now() - sent
+  webSocket.bind 'step', (obj) ->
+#    console.log obj
+    return unless obj.operations?
+    for op in obj.operations
+      continue if op.name != 'exit'
+      times[id-1] = Date.now() #- sent
+      webSocket.trigger 'report' if id <= 1
       webSocket.disconnect()
       $counter.val(id-1)
-    webSocket.trigger 'ping'
+  onOpen = () ->
+#    sent = Date.now()
+    console.log 'open!'
+    webSocket.trigger 'simulateGrid', Tests.searchTreasures
 
   onClose = () ->
     console.log id, 'closed, starting next'
@@ -39,9 +45,10 @@ runTest = (id) ->
   webSocket._conn.on_close = onClose
   webSocket._conn.on_error = onError
   webSocket._conn.on_open = onOpen
-
+  console.log webSocket
 $ () ->
 
   $('#runTests').click () ->
+    console.log 'start!'
     url = $('#url').val()
     runTest(tests)

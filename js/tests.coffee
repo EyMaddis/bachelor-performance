@@ -1035,18 +1035,7 @@
     }
   better_search_demo: {
     "code":"loop do \n  if look(:front) == :treasure\n  \tmove\n  \ttake\n  elsif look(:right) == :treasure\n  \tturn :right\n  elsif look(:left) == :treasure\n    turn :left\n  else\n    break\n  end\nend\n",
-    "grid":{
-      "width":14,
-      "height":10,
-      "objects":[],
-      "ship":{
-        "name":"ship",
-        "x":3,
-        "y":3,
-        "rotation":0
-      },
-      "size":32
-    },
+    "grid":{"width":14,"height":10,"objects":[{"name":"wave","x":3,"y":5},{"name":"wave","x":3,"y":6},{"name":"wave","x":4,"y":6},{"name":"wave","x":4,"y":7},{"name":"wave","x":4,"y":8},{"name":"wave","x":5,"y":8},{"name":"wave","x":3,"y":7},{"name":"wave","x":3,"y":8},{"name":"treasure","x":6,"y":3},{"name":"treasure","x":8,"y":3},{"name":"treasure","x":9,"y":3},{"name":"treasure","x":10,"y":3},{"name":"treasure","x":10,"y":2},{"name":"treasure","x":10,"y":1},{"name":"treasure","x":10,"y":4},{"name":"treasure","x":10,"y":5},{"name":"treasure","x":10,"y":6},{"name":"treasure","x":10,"y":7},{"name":"monster","x":13,"y":0},{"name":"monster","x":13,"y":1},{"name":"monster","x":13,"y":2},{"name":"monster","x":13,"y":3},{"name":"monster","x":13,"y":5},{"name":"monster","x":13,"y":6},{"name":"monster","x":13,"y":7},{"name":"monster","x":13,"y":8},{"name":"monster","x":13,"y":9},{"name":"monster","x":13,"y":4},{"name":"wave","x":1,"y":8},{"name":"wave","x":2,"y":8},{"name":"wave","x":6,"y":8},{"name":"wave","x":2,"y":7},{"name":"wave","x":5,"y":7},{"name":"wave","x":2,"y":4},{"name":"wave","x":1,"y":3},{"name":"wave","x":2,"y":3},{"name":"wave","x":3,"y":4},{"name":"wave","x":4,"y":5},{"name":"wave","x":4,"y":4},{"name":"wave","x":3,"y":3},{"name":"wave","x":5,"y":6},{"name":"wave","x":2,"y":0},{"name":"wave","x":3,"y":0},{"name":"wave","x":4,"y":0},{"name":"treasure","x":9,"y":4},{"name":"treasure","x":9,"y":5},{"name":"treasure","x":9,"y":6},{"name":"treasure","x":9,"y":2},{"name":"treasure","x":8,"y":4},{"name":"treasure","x":8,"y":5},{"name":"treasure","x":7,"y":4},{"name":"treasure","x":8,"y":2},{"name":"treasure","x":9,"y":1},{"name":"treasure","x":10,"y":0},{"name":"monster","x":0,"y":0},{"name":"monster","x":1,"y":0},{"name":"monster","x":0,"y":1},{"name":"monster","x":0,"y":2},{"name":"monster","x":1,"y":1},{"name":"treasure","x":7,"y":3}],"ship":{"name":"ship","x":5,"y":3,"rotation":0},"size":32},
     "vars":[
 
     ],
